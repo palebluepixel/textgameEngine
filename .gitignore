@@ -1,0 +1,3 @@
+*.o
+build/game*
+build/.depend
