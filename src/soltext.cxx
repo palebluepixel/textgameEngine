@@ -5,6 +5,8 @@
 using namespace sol;
 using namespace std;
 
+state luastate;
+
 int add(int a, int b) { return a+b; }
 
 inline void my_panic(sol::optional<std::string> maybe_msg) {
@@ -57,47 +59,47 @@ private:
 };
 
 int main (int argc, char* argv[]) {
-
-        state lua(sol::c_call<decltype(&my_panic), &my_panic>);
-        lua.open_libraries( sol::lib::base );
+        //luastate(sol::c_call<decltype(&my_panic), &my_panic>);
+        lua_atpanic(luastate, sol::c_call<decltype(&my_panic), &my_panic>);
+        luastate.open_libraries( sol::lib::base );
 
         /* Two ways, in one we bind to an instance now, in the second
         we bind to the instance later */
         my_class inst = my_class(0);
         inst.func();
         inst.func();
-        lua.set_function("my_class_func", &my_class::func, &inst);
-        lua.set_function("my_class_func_2", &my_class::func);
+        luastate.set_function("my_class_func", &my_class::func, &inst);
+        luastate.set_function("my_class_func_2", &my_class::func);
 
-        lua.script(R"(
+        luastate.script(R"(
                 first_value = my_class_func()
                 second_value = my_class_func()
         )");
 
         // With no bound instance:
         my_class inst2 = my_class(24);
-        lua.set("obj", &inst2); //just "inst2" passes a copy
+        luastate.set("obj", &inst2); //just "inst2" passes a copy
         // Calls "func" on the class instance
         // referenced by "obj" in Lua
-        lua.script(R"(
+        luastate.script(R"(
                 third_value = my_class_func_2(obj)
                 fourth_value = my_class_func_2(obj)
         )");
 
         // Have to mantually go back and get data from lua if we didn't
         // pass it as a reference
-        //inst2.a = lua.get<my_class>("obj").a;
+        //inst2.a = luastate.get<my_class>("obj").a;
 
         my_class inst3 = my_class(69);
 
-        lua.new_usertype<my_class>( "my_class",
+        luastate.new_usertype<my_class>( "my_class",
             constructors<my_class(int)>(),
             "func", &my_class::func,
             "a", property(&my_class::geta, &my_class::seta),
             "genericData", property(&my_class::getGeneric, &my_class::setGeneric) 
         );
-        lua.set("real", &inst3);
-        lua.script(R"(
+        luastate.set("real", &inst3);
+        luastate.script(R"(
             fifth_value = real:func()
             sixth_value = real:func()
             final_value = real.a
@@ -105,36 +107,36 @@ int main (int argc, char* argv[]) {
 
         printf("Instance 1: %d\nInstance2: %d\nInstance3: %d\n", inst.geta(), inst2.geta(), inst3.geta());
         printf("Lua sees %d %d %d %d %d %d and %d\n", 
-            lua.get<int>("first_value"),
-            lua.get<int>("second_value"),
-            lua.get<int>("third_value"),
-            lua.get<int>("fourth_value"),
-            lua.get<int>("fifth_value"),
-            lua.get<int>("sixth_value"),
-            lua.get<int>("final_value"));
+            luastate.get<int>("first_value"),
+            luastate.get<int>("second_value"),
+            luastate.get<int>("third_value"),
+            luastate.get<int>("fourth_value"),
+            luastate.get<int>("fifth_value"),
+            luastate.get<int>("sixth_value"),
+            luastate.get<int>("final_value"));
 
 
-        lua["add_func"] = add;
+        luastate["add_func"] = add;
 
-        lua.script_file( "../src/script.lua" );
+        luastate.script_file( "../src/script.lua" );
 
-        lua.script_file("../src/script2.lua");
+        luastate.script_file("../src/script2.lua");
 
-        int width = lua["window"]["width"];
-        std::string name = lua["window"]["title"];
-        printf("%s width: %d number : %d\n", name.c_str(), width, lua.get<int>("number"));
+        int width = luastate["window"]["width"];
+        std::string name = luastate["window"]["title"];
+        printf("%s width: %d number : %d\n", name.c_str(), width, luastate.get<int>("number"));
 
-        lua["newtable"] = lua.create_table_with(
+        luastate["newtable"] = luastate.create_table_with(
             "key0", 24,
             "key1", 25
         );
 
-        int key0 = lua["newtable"]["key0"];
+        int key0 = luastate["newtable"]["key0"];
         printf("key0: %d\n", key0);
 
 
         // Functions
-        sol::function inc = lua.get<sol::function>("inc");
+        sol::function inc = luastate.get<sol::function>("inc");
         int x = 0;
         int xinc = inc(x);
         printf("Increment test %d %d\n", x, xinc);
@@ -143,11 +145,11 @@ int main (int argc, char* argv[]) {
 
         //Creating an object from a lua script, then modifying
         //that data in a second script
-        my_class fromLua = my_class(lua.get<table>("myclass1").get<int>("a"));
-        lua.set("myclass1", &fromLua); //replace existing table entry
-        printf("My class before third script: %d %d\n", fromLua.geta(), lua.get<my_class>("myclass1").geta());
-        lua.script_file("../src/script3.lua");
-        printf("My class after third script: %d %d\n", fromLua.geta(), lua.get<my_class>("myclass1").geta());
+        my_class fromLua = my_class(luastate.get<table>("myclass1").get<int>("a"));
+        luastate.set("myclass1", &fromLua); //replace existing table entry
+        printf("My class before third script: %d %d\n", fromLua.geta(), luastate.get<my_class>("myclass1").geta());
+        luastate.script_file("../src/script3.lua");
+        printf("My class after third script: %d %d\n", fromLua.geta(), luastate.get<my_class>("myclass1").geta());
 
 
         my_class_list instList;
@@ -162,16 +164,16 @@ int main (int argc, char* argv[]) {
             instList.getInstance("instance3")->geta(),
             instList.getInstance("instanceFromLua")->geta());
 
-        lua.new_usertype<my_class_list>( "my_class_list",
+        luastate.new_usertype<my_class_list>( "my_class_list",
             constructors<my_class_list()>(),
             "getInstance", &my_class_list::getInstance,
             "addInstance", &my_class_list::addInstance
         );
 
-        lua.set("instList", &instList);
+        luastate.set("instList", &instList);
 
-        lua.script_file("../src/script4.lua");
-        table verbs = lua.get<table>("verbs");
+        luastate.script_file("../src/script4.lua");
+        table verbs = luastate.get<table>("verbs");
         sol::function zeroa = verbs.get<sol::function>("zeroa");
         zeroa();
 
