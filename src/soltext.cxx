@@ -1,4 +1,4 @@
-#include <sol.hpp> // or #include "sol.hpp", whichever suits your needs
+/*#include <sol.hpp> // or #include "sol.hpp", whichever suits your needs
 #include <iostream>
 #include <unordered_map>
 
@@ -63,8 +63,8 @@ int main (int argc, char* argv[]) {
         lua_atpanic(luastate, sol::c_call<decltype(&my_panic), &my_panic>);
         luastate.open_libraries( sol::lib::base );
 
-        /* Two ways, in one we bind to an instance now, in the second
-        we bind to the instance later */
+        //Two ways, in one we bind to an instance now, in the second
+        we bind to the instance later
         my_class inst = my_class(0);
         inst.func();
         inst.func();
@@ -189,4 +189,4 @@ int main (int argc, char* argv[]) {
         printf("Done.\n");
 
         return 0;
-}
+}*/

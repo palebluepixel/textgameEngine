@@ -11,16 +11,15 @@ using namespace std;
 /* Globally availible script state */
 extern state luastate;
 
-class Object {
+class gameObject {
 public:
-	Object(sol::table t);
-	~Object();
+	gameObject();
 
 	inline string getDisplayName() { return this->displayName; }
 	inline void setDisplayName(string s) { this->displayName = s; }
 
-	inline void addAlias(string s) { aliases.push_back(s); }
-	inline int goesByAlias(string s) { return aliases[s] != NULL; }
+	inline void addAlias(string s) { this->aliases.push_back(s); }
+	int goesByAlias(string s);
 
 
 	/* This will add a new property with the given value if the
@@ -46,7 +45,7 @@ public:
 
 	/* Returns the function associated with the verb v, or nil if none
 	exists. */
-	void getVerbFunction(string v);
+	sol::function getVerbFunction(string v);
 
 	/* Executes the verb function and returns 1 if it an entry exists
 	for this verb, otherwise returns 0. */

@@ -1,4 +1,5 @@
 #include <sol.hpp>
+#include <iostream>
 #include "object.hxx"
 
 using namespace sol;
@@ -23,19 +24,41 @@ int main (int argc, char* argv[]) {
     luastate.open_libraries( sol::lib::base );
 
     /* Register object class */
-    luastate.new_usertype<Object>( "Object",
-        constructors<Object(sol::table)>(),
-        "addAlias", Object::addAlias,
-        "goesByAlias", Object::goesByAlias,
-        "setProperty", &Object::setProperty,
-        "getProperty", &Object::getProperty,
-        "getPropertyType", &Object::getPropertyType,
-        "getPropertyExpectType", &Object::getPropertyExpectType,
-        "setVerb", &Object::setVerb,
-        "getVerbFunction", &Object::getVerbFunction,
-        "executeVerbFunction", &Object::executeVerbFunction,
-        "displayName", property(&Object::getDisplayName, &Object::setDisplayName)
+    luastate.new_usertype<gameObject>( "gameObject",
+        constructors<gameObject()>(),
+        "addAlias", gameObject::addAlias,
+        "goesByAlias", gameObject::goesByAlias,
+        "setProperty", &gameObject::setProperty,
+        "getProperty", &gameObject::getProperty,
+        "getPropertyType", &gameObject::getPropertyType,
+        "getPropertyExpectType", &gameObject::getPropertyExpectType,
+        "setVerb", &gameObject::setVerb,
+        "getVerbFunction", &gameObject::getVerbFunction,
+        "executeVerbFunction", &gameObject::executeVerbFunction,
+        "displayName", property(&gameObject::getDisplayName, &gameObject::setDisplayName)
     );
 
-    
+    printf("gameObject class registered\n");
+
+    /* Create test objects */
+    gameObject *testGameObject1 = new gameObject();
+    gameObject *testGameObject2 = new gameObject();
+
+    printf("gameObjects Created\n");
+
+    luastate.set("testGameObject1", testGameObject1);
+    luastate.set("testGameObject2", testGameObject2);
+
+    printf("gameObjects added\n");
+
+    luastate.script_file("../src/scriptObjTest.lua");
+
+    printf("%s\n", testGameObject1->getDisplayName().c_str());
+
+    //printf("%d\n", testGameObject1->getProperty("coolness").get_type());
+
+    printf("Luastate Property Coolness: %d %d\n", testGameObject1->getProperty("coolness").as<int>(),
+    	testGameObject2->getProperty("coolness").as<int>());
+
+    printf("Done\n");
 }
