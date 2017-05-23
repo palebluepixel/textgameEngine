@@ -1,0 +1,1 @@
+myclass1:func()

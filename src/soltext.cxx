@@ -8,6 +8,8 @@ int add(int a, int b) { return a+b; }
 class my_class {
 public:
         int a = 0;
+        inline int geta() { return this->a; }
+        inline void seta(int a) { this->a = a; }
 
         inline my_class(int x) : a(x) {
 
@@ -57,22 +59,24 @@ int main (int argc, char* argv[]) {
         lua.new_usertype<my_class>( "my_class",
             constructors<my_class(int)>(),
             "func", &my_class::func,
-            "a", property(&my_class::a) //would add getter and setter here if private
+            "a", property(&my_class::geta, &my_class::seta) //would add getter and setter here if private
         );
         lua.set("real", &inst3);
         lua.script(R"(
             fifth_value = real:func()
             sixth_value = real:func()
+            final_value = real.a
         )");
 
         printf("Instance 1: %d\nInstance2: %d\nInstance3: %d\n", inst.a, inst2.a, inst3.a);
-        printf("Lua sees %d %d %d %d %d %d\n", 
+        printf("Lua sees %d %d %d %d %d %d and %d\n", 
             lua.get<int>("first_value"),
             lua.get<int>("second_value"),
             lua.get<int>("third_value"),
             lua.get<int>("fourth_value"),
             lua.get<int>("fifth_value"),
-            lua.get<int>("sixth_value"));
+            lua.get<int>("sixth_value"),
+            lua.get<int>("final_value"));
 
 
         lua["add_func"] = add;
@@ -99,6 +103,16 @@ int main (int argc, char* argv[]) {
         int x = 0;
         int xinc = inc(x);
         printf("Increment test %d %d\n", x, xinc);
+
+
+
+        //Creating an object from a lua script, then modifying
+        //that data in a second script
+        my_class fromLua = my_class(lua.get<table>("myclass1").get<int>("a"));
+        lua.set("myclass1", &fromLua); //replace existing table entry
+        printf("My class before third script: %d %d\n", fromLua.geta(), lua.get<my_class>("myclass1").geta());
+        lua.script_file("../src/script3.lua");
+        printf("My class after third script: %d %d\n", fromLua.geta(), lua.get<my_class>("myclass1").geta());
 
         printf("Done.\n");
 

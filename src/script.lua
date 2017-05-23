@@ -9,3 +9,7 @@ window = {
         height = 300
     }
 }
+
+myclass1 = {
+    a = 90
+}
