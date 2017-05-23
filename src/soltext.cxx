@@ -1,9 +1,20 @@
 #include <sol.hpp> // or #include "sol.hpp", whichever suits your needs
+#include <iostream>
+#include <unordered_map>
 
 using namespace sol;
+using namespace std;
 
 int add(int a, int b) { return a+b; }
 
+inline void my_panic(sol::optional<std::string> maybe_msg) {
+        std::cerr << "Lua is in a panic state and will now abort() the application" << std::endl;
+        if (maybe_msg) {
+                const std::string& msg = maybe_msg.value();
+                std::cerr << "\terror message: " << msg << std::endl;
+        }
+        // When this function exits, Lua will exhibit default behavior and abort()
+}
 
 class my_class {
 public:
@@ -21,10 +32,27 @@ public:
         }
 };
 
+class my_class_list {
+public:
+    inline my_class_list() {};
+
+    inline my_class* getInstance(string s) {
+        my_class* result = this->instances[s];
+        printf("In getInstance %s, getting %p\n", s.c_str(), result);
+        return result;
+    }
+
+    inline void addInstance(string s, my_class* m) {
+        this->instances[s] = m;
+    }
+
+private:
+    unordered_map<string, my_class*> instances;
+};
 
 int main (int argc, char* argv[]) {
 
-        state lua;
+        state lua(sol::c_call<decltype(&my_panic), &my_panic>);
         lua.open_libraries( sol::lib::base );
 
         /* Two ways, in one we bind to an instance now, in the second
@@ -99,7 +127,7 @@ int main (int argc, char* argv[]) {
 
 
         // Functions
-        function inc = lua.get<function>("inc");
+        sol::function inc = lua.get<sol::function>("inc");
         int x = 0;
         int xinc = inc(x);
         printf("Increment test %d %d\n", x, xinc);
@@ -113,6 +141,34 @@ int main (int argc, char* argv[]) {
         printf("My class before third script: %d %d\n", fromLua.geta(), lua.get<my_class>("myclass1").geta());
         lua.script_file("../src/script3.lua");
         printf("My class after third script: %d %d\n", fromLua.geta(), lua.get<my_class>("myclass1").geta());
+
+
+        my_class_list instList;
+        instList.addInstance("instance1", &inst);
+        instList.addInstance("instance2", &inst2);
+        instList.addInstance("instance3", &inst3);
+        instList.addInstance("instanceFromLua", &fromLua);
+
+        printf("Checking instances added: %d %d %d %d\n", 
+            instList.getInstance("instance1")->geta(),
+            instList.getInstance("instance2")->geta(),
+            instList.getInstance("instance3")->geta(),
+            instList.getInstance("instanceFromLua")->geta());
+
+        lua.new_usertype<my_class_list>( "my_class_list",
+            constructors<my_class_list()>(),
+            "getInstance", &my_class_list::getInstance,
+            "addInstance", &my_class_list::addInstance
+        );
+
+        lua.set("instList", &instList);
+
+        lua.script_file("../src/script4.lua");
+        table verbs = lua.get<table>("verbs");
+        sol::function zeroa = verbs.get<sol::function>("zeroa");
+        zeroa();
+
+        printf("Zero out 'a' for the last instance: %d \n", fromLua.geta());
 
         printf("Done.\n");
 
