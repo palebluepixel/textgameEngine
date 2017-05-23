@@ -8,18 +8,19 @@ LIB_DIR= $(BUILD_DIR)/../lib
 
 LUA = $(LIB_DIR)/lua-5.2.4
 LUABRIDGE = $(LIB_DIR)/luaBridge
+SOL = $(LIB_DIR)/sol2
 
-CXX = g++ -std=c++11
+CXX = g++ -std=c++14
 CXXFLAGS = -g -Wall
 CPPFLAGS = -I/usr/local/include
 
 SRCS = $(wildcard $(SRC_DIR)/*.cxx)
-LIBS = -llua 
+LIBS = -llua
 INCLUDES = $(wildcard $(SRC_DIR)/*/*.hxx)
 OBJS = $(notdir $(SRCS:.cxx=.o))
 
-LDFLAGS = -L$(LIB_DIR) -L$(LUA)/src
-IPATH = -I../src -I../lib -I$(LUA)/src -I$(LUABRIDGE)
+LDFLAGS = -L$(LIB_DIR) -L$(LUA)/src -L$(SOL)
+IPATH = -I../src -I../lib -I$(LUA)/src -I$(LUABRIDGE) -I$(SOL)
 
 $(TARGET) : $(OBJS) .depend
 	$(CXX) $(OBJS) $(CXXFLAGS) $(IPATH) -o $(TARGET) $(LDFLAGS) $(LIBS)

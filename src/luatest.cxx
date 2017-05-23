@@ -1,4 +1,4 @@
-// main.cpp
+/*// main.cpp
 #include <lua.hpp>
 #include <LuaBridge.h>
 #include <iostream>
@@ -38,6 +38,8 @@ void printMap(unordered_map<string, luabridge::LuaRef> map)
         {
             printf("%s : %d\n", key.c_str(), it.second.cast<int>());
         }
+        if(value.isTable())
+            printf("%s is a table\n", key.c_str());
     }
 }
 
@@ -52,7 +54,7 @@ int main(int argc, char*argv[])
     }
     luaL_openlibs(L);
     
-    /*LuaRef s = getGlobal(L, "teststring");
+    LuaRef s = getGlobal(L, "teststring");
     if (s.isNil()) {
         cout << "Variable not found!" << endl;
     }
@@ -73,9 +75,8 @@ int main(int argc, char*argv[])
     cout << titleString << endl;
     cout << "width = " << width << endl;
     cout << "height = " << height << endl;
-    cout << "And here's our number:" << answer << endl;*/
+    cout << "And here's our number:" << answer << endl;
 
-    /* Build unordered map */
     LuaRef mapRef = getGlobal(L, "window");
     if (mapRef.isNil()) {
         cout << "Variable not found!" << endl;
@@ -83,4 +84,6 @@ int main(int argc, char*argv[])
 
     unordered_map<string, luabridge::LuaRef> map = getKeyValueMap(mapRef);
     printMap(map);
-}
+    LuaRef r = map.find("width")->second;
+    printf("width: %d\n", map.find("width")->second.cast<int>());
+}*/
