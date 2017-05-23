@@ -18,18 +18,24 @@ inline void my_panic(sol::optional<std::string> maybe_msg) {
 
 class my_class {
 public:
-        int a = 0;
         inline int geta() { return this->a; }
         inline void seta(int a) { this->a = a; }
 
-        inline my_class(int x) : a(x) {
+        inline sol::object getGeneric() {return this->genericData;}
+        inline void setGeneric(sol::object g) {this->genericData = g;} 
 
+        inline my_class(int x) : a(x) {
+            genericData = sol::object();
         }
 
         inline int func() {
                 ++a; // increment a by 1
                 return a;
         }
+
+private:
+    int a;
+    sol::object genericData;
 };
 
 class my_class_list {
@@ -87,7 +93,8 @@ int main (int argc, char* argv[]) {
         lua.new_usertype<my_class>( "my_class",
             constructors<my_class(int)>(),
             "func", &my_class::func,
-            "a", property(&my_class::geta, &my_class::seta) //would add getter and setter here if private
+            "a", property(&my_class::geta, &my_class::seta),
+            "genericData", property(&my_class::getGeneric, &my_class::setGeneric) 
         );
         lua.set("real", &inst3);
         lua.script(R"(
@@ -96,7 +103,7 @@ int main (int argc, char* argv[]) {
             final_value = real.a
         )");
 
-        printf("Instance 1: %d\nInstance2: %d\nInstance3: %d\n", inst.a, inst2.a, inst3.a);
+        printf("Instance 1: %d\nInstance2: %d\nInstance3: %d\n", inst.geta(), inst2.geta(), inst3.geta());
         printf("Lua sees %d %d %d %d %d %d and %d\n", 
             lua.get<int>("first_value"),
             lua.get<int>("second_value"),
@@ -169,6 +176,13 @@ int main (int argc, char* argv[]) {
         zeroa();
 
         printf("Zero out 'a' for the last instance: %d \n", fromLua.geta());
+        
+        printf("Check genericData: ");
+        sol::object g = fromLua.getGeneric();
+        if(g.is<int>())
+            printf("%d\n", g.as<int>());
+        if(g.is<string>())
+            printf("%s\n", g.as<string>().c_str());
 
         printf("Done.\n");
 
