@@ -14,8 +14,11 @@ extern state luastate;
 class gameObject {
 public:
 	gameObject();
-	/* Build an object from a lua table describing its name,
-	properties, and interaction functions (verbs). */
+	/* Build an object from a lua table which must have the following:
+		* a display name (string),
+		* a list of aliases (table where the aliases are values (array string)),
+		* a table of properties (table string -> sol::object),
+		* a table of verbs (table string -> sol::function) */
 	gameObject(sol::table t, string name);
 
 	/* Getters and setters for display name */
@@ -69,6 +72,9 @@ public:
 	/* Returns 1 if the object goes by that alias, 0 otherwise. */
 	int goesByAlias(string s);
 
+
+	/* TODO: reset object fields from table (to allow reloading from
+	scripts) */
 
 private:
 	/* Name that appears when talkimg about this item in descriptive text */

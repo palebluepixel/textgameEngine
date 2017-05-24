@@ -1,6 +1,6 @@
 #include <sol.hpp>
 #include <iostream>
-#include "object.hxx"
+#include "ObjectList.hxx"
 
 using namespace sol;
 using namespace std;
@@ -39,29 +39,29 @@ int main (int argc, char* argv[]) {
         "displayName", property(&gameObject::getDisplayName, &gameObject::setDisplayName)
     );
 
-    printf("gameObject class registered\n");
+    /* Register object list class */
+    luastate.new_usertype<ObjectList>("ObjectList",
+    	constructors<ObjectList(), ObjectList(sol::table)>(),
+    	"getObject", &ObjectList::getObject
+    );
+
+    printf("classes registered\n");
 
     /* Create test objects by loading lua script*/
     luastate.script_file("../src/objects.lua");
-    sol::table objectTable = luastate.get<table>("objects");
-    gameObject *testGameObject1 = new gameObject(objectTable.get<table>("obj1"), "obj1");
-    gameObject *testGameObject2 = new gameObject(objectTable.get<table>("obj2"), "obj2");
+    //printf("Object script read\n");
+    sol::table objectTable = luastate.get<table>("objectEntries");
+    ObjectList *objects = new ObjectList(objectTable);
 
     printf("gameObjects Created\n");
 
-    luastate.set("testGameObject1", testGameObject1);
-    luastate.set("testGameObject2", testGameObject2);
+    //luastate.set("testGameObject1", objects->getObject("obj1"));
+    //luastate.set("testGameObject2", objects->getObject("obj2"));
+    luastate.set("objects", objects);
 
     printf("gameObjects added\n");
 
     luastate.script_file("../src/scriptObjTest.lua");
-
-    printf("%s\n", testGameObject1->getDisplayName().c_str());
-
-    //printf("%d\n", testGameObject1->getProperty("coolness").get_type());
-
-    printf("Luastate Property Coolness: %d %d\n", testGameObject1->getProperty("coolness").as<int>(),
-    	testGameObject2->getProperty("coolness").as<int>());
 
     printf("Done\n");
 }

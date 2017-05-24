@@ -1,4 +1,4 @@
-objects = {
+objectEntries = {
     obj1 = {
         displayName = "Lever",
         aliases = {"Lever"},
@@ -8,8 +8,15 @@ objects = {
     	},
     	verbs = {
     		pull = function ()
-    			print("lever was pulled")
-    		end
+				l = objects:getObject("obj1")
+				p = l:getProperty("pulled")
+				if p==0 then p=1 else p=0 end
+				l:setProperty("pulled", p)
+				print("You pulled the lever.")
+			end,
+			eat = function ()
+				print("You can't eat that!")
+			end
     	}
     },
     obj2 = {
