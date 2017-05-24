@@ -16,7 +16,7 @@ public:
 	gameObject();
 	/* Build an object from a lua table describing its name,
 	properties, and interaction functions (verbs). */
-	gameObject(sol::table t);
+	gameObject(sol::table t, string name);
 
 	/* Getters and setters for display name */
 	inline string getDisplayName() { return this->displayName; }

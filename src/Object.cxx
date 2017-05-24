@@ -7,13 +7,14 @@ gameObject::gameObject()
 
 /* TODO: verify that user-supplied object data has the expected
 type before reading, give helpful error messages */
-gameObject::gameObject(sol::table t)
+gameObject::gameObject(sol::table t, string name)
 {
 	string displayName = t.get<string>("displayName");
 	sol::table aliases = t.get<sol::table>("aliases");
 	sol::table properties = t.get<sol::table>("properties");
 	sol::table verbs = t.get<sol::table>("verbs");
 
+	this->christianName = name;
 	this->setDisplayName(displayName);
 	this->setPropertiesFromTable(properties);
 	this->setVerbsFromTable(verbs);
