@@ -25,7 +25,7 @@ int main (int argc, char* argv[]) {
 
     /* Register object class */
     luastate.new_usertype<gameObject>( "gameObject",
-        constructors<gameObject()>(),
+        constructors<gameObject(), gameObject(sol::table)>(),
         "addAlias", gameObject::addAlias,
         "goesByAlias", gameObject::goesByAlias,
         "setProperty", &gameObject::setProperty,
@@ -33,16 +33,18 @@ int main (int argc, char* argv[]) {
         "getPropertyType", &gameObject::getPropertyType,
         "getPropertyExpectType", &gameObject::getPropertyExpectType,
         "setVerb", &gameObject::setVerb,
-        "getVerbFunction", &gameObject::getVerbFunction,
+        "getVerb", &gameObject::getVerb,
         "executeVerbFunction", &gameObject::executeVerbFunction,
         "displayName", property(&gameObject::getDisplayName, &gameObject::setDisplayName)
     );
 
     printf("gameObject class registered\n");
 
-    /* Create test objects */
-    gameObject *testGameObject1 = new gameObject();
-    gameObject *testGameObject2 = new gameObject();
+    /* Create test objects by loading lua script*/
+    luastate.script_file("../src/objects.lua");
+    sol::table objectTable = luastate.get<table>("objects");
+    gameObject *testGameObject1 = new gameObject(objectTable.get<table>("obj1"));
+    gameObject *testGameObject2 = new gameObject(objectTable.get<table>("obj2"));
 
     printf("gameObjects Created\n");
 

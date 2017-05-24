@@ -5,6 +5,39 @@ gameObject::gameObject()
 
 }
 
+/* TODO: verify that user-supplied object data has the expected
+type before reading, give helpful error messages */
+gameObject::gameObject(sol::table t)
+{
+	string displayName = t.get<string>("displayName");
+	sol::table aliases = t.get<sol::table>("aliases");
+	sol::table properties = t.get<sol::table>("properties");
+	sol::table verbs = t.get<sol::table>("verbs");
+
+	this->setDisplayName(displayName);
+	this->setPropertiesFromTable(properties);
+	this->setVerbsFromTable(verbs);
+	this->setAliasesFromArray(aliases);
+}
+
+void gameObject::setPropertiesFromTable(sol::table props)
+{
+	props.for_each([&](const sol::object& key, const sol::object& value) 
+		{this->setProperty(key.as<string>(), value); });
+}
+
+void gameObject::setVerbsFromTable(sol::table verbs)
+{
+	verbs.for_each([&](const sol::object& key, const sol::object& value) 
+		{this->setVerb(key.as<string>(), value.as<sol::function>()); });
+}
+
+void gameObject::setAliasesFromArray(sol::table aliases)
+{
+	aliases.for_each([&](const sol::object& /*unused*/, const sol::object& value) 
+		{this->addAlias(value.as<string>()); });
+}
+
 int gameObject::goesByAlias(string s) 
 { 
 	for(string it : this->aliases ){
@@ -57,14 +90,18 @@ void gameObject::setVerb(string v, sol::function f)
 
 /* Returns the function associated with the verb v, or nil if none
 exists. */
-sol::function gameObject::getVerbFunction(string v)
+sol::function gameObject::getVerb(string v)
 {
 	return this->verbs[v];
 }
 
-/* Executes the verb function and returns 1 if it an entry exists
-for this verb, otherwise returns 0. */
+/* Executes the verb function. Returns 1 if thhe object has a valid
+function entry for this verb, otherwise returns 0. */
 int gameObject::executeVerbFunction(string v)
 {
-	return 0;
+	sol::function f = this->getVerb(v);
+	if(f == sol::nil)
+		return 0;
+	f();
+	return 1;
 }
