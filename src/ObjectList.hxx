@@ -3,11 +3,24 @@
 
 #include <unordered_map>
 #include "Object.hxx"
+#include "Room.hxx"
+#include "Exit.hxx"
 
 using namespace std;
 using namespace sol;
 
 /* Map of christian names (unique identifiers) to objects. */
+
+/* This is obviously inelegant, ObjectList should be a template 
+that takes a subclass of gameObject, but I'm not sure how to do it the
+elegant way and this project is due soon. 
+
+If I could do it again from scratch, I would have gameObject be
+the only class, and rooms and exits would simply have additional
+property fields relating to their use as exits. 
+
+Since I didn't do that, please forgive me for the copy/pasted 
+code. */
 
 class ObjectList {
 public:
@@ -33,6 +46,42 @@ private:
 	void addObject(string name, gameObject *obj);
 
 	unordered_map<string, gameObject*> objects;
+};
+
+
+class RoomList {
+public:
+	RoomList();
+	RoomList(sol::table t);
+
+	void addTableToList(sol::table t);
+
+	/* Get an object by its christian name (unique identifier),
+	or NULL if none exists. */
+	Room *getObject(string name);
+
+private:
+	void addObject(string name, Room *obj);
+
+	unordered_map<string, Room*> objects;
+};
+
+
+class ExitList {
+public:
+	ExitList();
+	ExitList(sol::table t);
+
+	void addTableToList(sol::table t);
+
+	/* Get an object by its christian name (unique identifier),
+	or NULL if none exists. */
+	Exit *getObject(string name);
+
+private:
+	void addObject(string name, Exit *obj);
+
+	unordered_map<string, Exit*> objects;
 };
 
 #endif

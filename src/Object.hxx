@@ -8,9 +8,6 @@
 using namespace sol;
 using namespace std;
 
-/* Globally availible script state */
-extern state luastate;
-
 class gameObject {
 public:
 	gameObject();
@@ -30,6 +27,10 @@ public:
 
 
 	/* Building object from table */
+	/* Used by constructors in child classes to set all of their object
+	fields from the table. Those child classes will then read additional
+	table values. */
+	void setObjectDataFromTable(sol::table t, string name);
 	void setPropertiesFromTable(sol::table props);
 	void setVerbsFromTable(sol::table verbs);
 	void setAliasesFromArray(sol::table aliases);
@@ -71,6 +72,10 @@ public:
 
 	/* Returns 1 if the object goes by that alias, 0 otherwise. */
 	int goesByAlias(string s);
+
+	/* Prints out the value of the given property. This can be used,
+	for example, to print descriptions easily. */
+	void printProperty(string prop);
 
 
 	/* TODO: reset object fields from table (to allow reloading from

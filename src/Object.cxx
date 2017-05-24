@@ -9,6 +9,14 @@ gameObject::gameObject()
 type before reading, give helpful error messages */
 gameObject::gameObject(sol::table t, string name)
 {
+	this->setObjectDataFromTable(t, name);
+}
+
+/* Used by constructors in child classes to set all of their object
+fields from the table. Those child classes will then read additional
+table values. */
+void gameObject::setObjectDataFromTable(sol::table t, string name)
+{
 	string displayName = t.get<string>("displayName");
 	sol::table aliases = t.get<sol::table>("aliases");
 	sol::table properties = t.get<sol::table>("properties");
@@ -105,4 +113,11 @@ int gameObject::executeVerbFunction(string v)
 		return 0;
 	f();
 	return 1;
+}
+
+/* Prints out the value of the given property. This can be used,
+for example, to print descriptions easily. */
+void gameObject::printProperty(string prop)
+{
+	printf("%s", this->getProperty(prop).as<string>().c_str());
 }
