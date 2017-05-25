@@ -26,12 +26,12 @@ void tellEm()
 
 void dontKnowVerb(string noun, string verb)
 {
-	printf("I don't know how to %s %s.\n", verb.c_str(), noun.c_str());
+	printf("I don't know how to %s %s.", verb.c_str(), noun.c_str());
 }
 
 void dontKnowNoun(string noun)
 {
-	printf("I don't know what %s is.\n", noun.c_str());
+	printf("I don't know what %s is.", noun.c_str());
 }
 
 /* Follow the procedure outlines above*/

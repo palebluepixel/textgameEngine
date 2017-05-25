@@ -119,7 +119,7 @@ int main (int argc, char* argv[]) {
     	"handleInput", &Parser::handleInput
     );
 
-    printf("classes registered\n");
+    //printf("classes registered\n");
 
     /* Create test objects by loading lua script*/
     luastate.script_file("../src/objects.lua");
@@ -136,7 +136,7 @@ int main (int argc, char* argv[]) {
     roomsLIST = new RoomList(roomTable);
     exitsLIST = new ExitList(exitTable);
 
-    printf("gameObjects Created\n");
+    //printf("gameObjects Created\n");
 
     //luastate.set("testGameObject1", objects->getObject("obj1"));
     //luastate.set("testGameObject2", objects->getObject("obj2"));
@@ -155,7 +155,7 @@ int main (int argc, char* argv[]) {
     //luastate.set_function("luaCastRoom", &luaCastRoom);
     //luastate.set_function("luaCastExit", &luaCastExit);
 
-    printf("gameObjects added\n");
+    //printf("gameObjects added\n");
 
     luastate.script_file("../src/scriptObjTest.lua");
 
@@ -163,9 +163,12 @@ int main (int argc, char* argv[]) {
     int shouldClose = 0;
     luastate.set("shouldClose", &shouldClose);
 
+    /* Print starting description */
+    luastate.script_file("../src/gamestart.lua");
+
     string inp;
     while(!shouldClose){
-    	cout << "\n> ";
+    	cout << "\n\n> ";
     	getline(cin, inp);
     	parser->handleInput(inp); 
     }

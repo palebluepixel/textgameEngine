@@ -1,6 +1,8 @@
 --TODO: move generics to new file
 function genericEnter (roomsList, roomName)
-	roomsList:getRoom(roomName):describeRoomContents()
+	r = roomsList:getRoom(roomName)
+	r:printDescription("descLong")
+	r:describeRoomContents()
 end
 
 roomEntries = {
@@ -14,7 +16,7 @@ roomEntries = {
 		objects = {},
 		exits = {"exit_room1_room2"},
 		onEnter = function () genericEnter(rooms,"room1") end,
-		onLeave = function () print("leave 1") end
+		onLeave = function () end
 	},
 
 	room2 = {
@@ -27,7 +29,7 @@ roomEntries = {
 		objects = {"obj1"},
 		exits = {"exit_room2_room1"},
 		onEnter = function() genericEnter(rooms, "room2") end,
-		onLeave = function () print("leave 2") end
+		onLeave = function () end
 	}
 }
 
@@ -47,10 +49,10 @@ exitEntries = {
 		roomFrom = "room1",
 		roomTo = "room2",
 		cond = function () 
-			return rooms:getRoom("room1"):hasObject("obj1") 
+			return 1 
 		end,
-		onPass = function () print("passing to room 2") end,
-		onFail = function () print("You can't go that way rn") end
+		onPass = function () end,
+		onFail = function () print("You can't go that way rn. ") end
 	},
 
 	exit_room2_room1 = {
@@ -60,14 +62,14 @@ exitEntries = {
 			descInRoom = function () return "There is an open field of grass to the west. " end
 		},
 		verbs = {
-			go = function() player:moveThrough(exit_room2_room1) end
+			go = function() player:moveThrough("exit_room2_room1") end
 		},
 		roomFrom = "room2",
 		roomTo = "room1",
 		cond = function () 
-			return rooms:getRoom("room1"):hasObject("obj1") 
+			return 1
 		end,
-		onPass = function () print("passing to room 2") end,
-		onFail = function () print("You can't go that way rn") end
+		onPass = function () end,
+		onFail = function () print("You can't go that way rn. ") end
 	}
 }
