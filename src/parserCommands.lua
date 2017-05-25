@@ -5,6 +5,7 @@ parserCommands = {
 			r = rooms:getRoom(player:getRoom())
 			r:printDescription("descLong")
 			r:describeRoomContents()
-		end
+		end,
+		exit = function() closeGame() end
 	}
 }

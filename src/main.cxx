@@ -29,6 +29,9 @@ RoomList *roomsLIST;
 ExitList *exitsLIST;
 Player *player;
 
+int shouldClose = 0;
+void closeGame() {shouldClose = 1;}
+
 int main (int argc, char* argv[]) {
 	
 	/* Initalization */
@@ -160,8 +163,7 @@ int main (int argc, char* argv[]) {
     luastate.script_file("../src/scriptObjTest.lua");
 
     /* Ability to quit the game */
-    int shouldClose = 0;
-    luastate.set("shouldClose", &shouldClose);
+    luastate.set_function("closeGame", &closeGame);
 
     /* Print starting description */
     luastate.script_file("../src/gamestart.lua");
