@@ -5,6 +5,7 @@
 #include "Room.hxx"
 #include "Exit.hxx"
 #include "Player.hxx"
+#include "Parser.hxx"
 
 using namespace sol;
 using namespace std;
@@ -107,17 +108,25 @@ int main (int argc, char* argv[]) {
     	"moveThrough", &Player::moveThrough
     );
 
+    /* Register class parser */
+    luastate.new_usertype<Parser>("Parser",
+    	constructors<Parser(), Parser(sol::table)>(),
+    	"handleInput", &Parser::handleInput
+    );
+
     printf("classes registered\n");
 
     /* Create test objects by loading lua script*/
     luastate.script_file("../src/objects.lua");
     luastate.script_file("../src/rooms.lua");
     luastate.script_file("../src/player.lua");
+    luastate.script_file("../src/parserCommands.lua");
     //printf("Object script read\n");
     sol::table objectTable = luastate.get<table>("objectEntries");
     sol::table roomTable = luastate.get<table>("roomEntries");
     sol::table exitTable = luastate.get<table>("exitEntries");
     sol::table playerTable = luastate.get<table>("playerStart");
+    sol::table parserTable = luastate.get<table>("parserCommands");
     objectsLIST = new ObjectList(objectTable);
     roomsLIST = new RoomList(roomTable);
     exitsLIST = new ExitList(exitTable);
@@ -133,6 +142,10 @@ int main (int argc, char* argv[]) {
     /* Player */
     player = new Player(playerTable);
     luastate.set("player", player);
+
+    /* Parser */
+    Parser *parser = new Parser(parserTable);
+    luastate.set("parser", parser);
 
     //luastate.set_function("luaCastRoom", &luaCastRoom);
     //luastate.set_function("luaCastExit", &luaCastExit);

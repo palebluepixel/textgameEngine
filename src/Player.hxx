@@ -58,7 +58,7 @@ public:
 	void dropItem(string item);
 
 	/* Checks whether the player can pass through the current exit,
-	and does nothing if it can't. Otherwise, changes the current room 
+	and calls onFail if it can't. Otherwise, changes the current room 
 	to the new room, and calls in order:
 		* The onLeave function of the current room
 		* The onPass function of the exit we are taking

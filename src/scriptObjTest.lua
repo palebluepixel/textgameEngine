@@ -55,5 +55,17 @@ player:dropItem("obj1");
 player:moveThrough("exit_room1_room2")
 print(player:getRoom())
 
+
+
+print("\n\n\n---Doing parser tests---")
+room1:removeObject("obj1")
+room2:addObject("obj1")
+print(testGameObject1:getProperty("pulled"))
+parser:handleInput("pull obj1")
+print(testGameObject1:getProperty("pulled"))
+parser:handleInput("pull obj1")
+print(testGameObject1:getProperty("pulled"))
+
+
 --I should make a function in room to call a "foreach"
 --on every item in the room
