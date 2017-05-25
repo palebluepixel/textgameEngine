@@ -70,18 +70,18 @@ void RoomList::addTableToList(sol::table t)
 			Room *obj = new Room(value.as<table>(), cname);
 
 			/* Add it to our list */
-			this->addObject(cname, obj); 
+			this->addRoom(cname, obj); 
 		});
 }
 
 /* Get an object by its christian name (unique identifier),
 or NULL if none exists. */
-Room *RoomList::getObject(string name)
+Room *RoomList::getRoom(string name)
 {
 	return this->objects[name];
 }
 
-void RoomList::addObject(string name, Room *obj)
+void RoomList::addRoom(string name, Room *obj)
 {
 	this->objects[name] = obj;
 }
@@ -119,18 +119,18 @@ void ExitList::addTableToList(sol::table t)
 			Exit *obj = new Exit(value.as<table>(), cname);
 
 			/* Add it to our list */
-			this->addObject(cname, obj); 
+			this->addExit(cname, obj); 
 		});
 }
 
 /* Get an object by its christian name (unique identifier),
 or NULL if none exists. */
-Exit *ExitList::getObject(string name)
+Exit *ExitList::getExit(string name)
 {
 	return this->objects[name];
 }
 
-void ExitList::addObject(string name, Exit *obj)
+void ExitList::addExit(string name, Exit *obj)
 {
 	this->objects[name] = obj;
 } 

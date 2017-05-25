@@ -6,8 +6,8 @@ roomEntries = {
 		verbs = {},
 		objects = {},
 		exits = {"exit_room1_room2"},
-		onEnter = function () end,
-		onLeave = function () end
+		onEnter = function () print("enter 1") end,
+		onLeave = function () print("leave 1")end
 	},
 	room2 = {
 		displayName = "House wall",
@@ -16,8 +16,8 @@ roomEntries = {
 		verbs = {},
 		objects = {"obj1"},
 		exits = {},
-		onEnter = function () end,
-		onLeave = function () end
+		onEnter = function () print("enter 2") end,
+		onLeave = function () print("leave 2") end
 	}
 }
 
@@ -32,7 +32,9 @@ exitEntries = {
 		verbs = {},
 		roomFrom = "room1",
 		roomTo = "room2",
-		cond = function () return 1 end,
-		onPass = function () end
+		cond = function () 
+			return rooms:getRoom("room1"):containsObject("obj1") 
+		end,
+		onPass = function () print("passing to room 2") end
 	}
 }

@@ -68,6 +68,7 @@ int main (int argc, char* argv[]) {
     	"getRoomFrom", &Exit::getRoomFrom,
     	"getRoomTo", &Exit::getRoomTo,
     	"getCond", &Exit::getCond,
+    	"executeCond", &Exit::executeCond,
     	"getOnPass", &Exit::getOnPass,
     	"executeOnPass", &Exit::executeOnPass,
     	sol::base_classes, sol::bases<gameObject>()
@@ -80,11 +81,11 @@ int main (int argc, char* argv[]) {
     );
     luastate.new_usertype<RoomList>("RoomList",
     	constructors<RoomList(), RoomList(sol::table)>(),
-    	"getObject", &RoomList::getObject
+    	"getRoom", &RoomList::getRoom
     );
     luastate.new_usertype<ExitList>("ExitList",
     	constructors<ExitList(), ExitList(sol::table)>(),
-    	"getObject", &ExitList::getObject
+    	"getExit", &ExitList::getExit
     );
 
     printf("classes registered\n");

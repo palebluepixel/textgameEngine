@@ -58,10 +58,10 @@ public:
 
 	/* Get an object by its christian name (unique identifier),
 	or NULL if none exists. */
-	Room *getObject(string name);
+	Room *getRoom(string name);
 
 private:
-	void addObject(string name, Room *obj);
+	void addRoom(string name, Room *obj);
 
 	unordered_map<string, Room*> objects;
 };
@@ -76,10 +76,10 @@ public:
 
 	/* Get an object by its christian name (unique identifier),
 	or NULL if none exists. */
-	Exit *getObject(string name);
+	Exit *getExit(string name);
 
 private:
-	void addObject(string name, Exit *obj);
+	void addExit(string name, Exit *obj);
 
 	unordered_map<string, Exit*> objects;
 };
