@@ -23,10 +23,12 @@ Exit::Exit(sol::table t, string name)
 	string roomTo = t.get<string>("roomTo");
 	sol::function cond = t.get<sol::function>("cond");
 	sol::function onPass = t.get<sol::function>("onPass");
+	sol::function onFail = t.get<sol::function>("onFail");
 
 	this->setRoomFrom(roomFrom);
 	this->setRoomTo(roomTo);
 	this->setCond(cond);
 	this->setOnPass(onPass);
+	this->setOnFail(onFail);
 	
 }

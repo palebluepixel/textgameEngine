@@ -53,15 +53,14 @@ void Player::dropItem(string item)
 	r->addObject(item);
 }
 
-/* Changes the current room to the new room, and calls in order:
+/* Checks if the player can move through the current exit, if not 
+calls onFail and returns. Otherwise, changes the current room to 
+the new room, and calls in order:
 	* The onLeave function of the current room
 	* The onPass function of the exit we are taking
 	* Places the player in the new room
 	* The onEnter function of the room we are entering
-Checking whether the play can move through the exit should be
-handled by the scripting engine. TODO: eventually might make a
-"onFailtoPass function that gets called, and do condition
-checking here. */
+*/
 void Player::moveThrough(string exit)
 {
 	/* Get rooms and do error checking */
@@ -70,6 +69,11 @@ void Player::moveThrough(string exit)
 		printf("warning, nonexistant exit: %s\n", exit.c_str());
 		return;
 	}
+	if(!e->executeCond()){
+		e->executeOnFail();
+		return;
+	}
+
 	Room *from = this->getRoomObj();
 	if(!from){
 		printf("Warning, player room NULL: %s\n", this->getRoom().c_str());

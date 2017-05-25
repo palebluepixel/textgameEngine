@@ -33,8 +33,9 @@ exitEntries = {
 		roomFrom = "room1",
 		roomTo = "room2",
 		cond = function () 
-			return rooms:getRoom("room1"):containsObject("obj1") 
+			return rooms:getRoom("room1"):hasObject("obj1") 
 		end,
-		onPass = function () print("passing to room 2") end
+		onPass = function () print("passing to room 2") end,
+		onFail = function () print("You can't go that way rn") end
 	}
 }

@@ -58,7 +58,7 @@ int main (int argc, char* argv[]) {
     	constructors<Room(), Room(sol::table, string)>(),
     	"addObject", &Room::addObject,
     	"removeObject", &Room::removeObject,
-    	"containsObject", &Room::containsObject,
+    	"hasObject", &Room::containsObject,
     	"addExit", &Room::addExit,
     	"removeExit", &Room::removeExit,
     	"containsExit", &Room::containsExit,
@@ -76,6 +76,7 @@ int main (int argc, char* argv[]) {
     	"executeCond", &Exit::executeCond,
     	"getOnPass", &Exit::getOnPass,
     	"executeOnPass", &Exit::executeOnPass,
+    	"executeOnFail", &Exit::executeOnFail,
     	sol::base_classes, sol::bases<gameObject>()
     );
 
@@ -99,7 +100,11 @@ int main (int argc, char* argv[]) {
     	"getRoom", &Player::getRoom,
     	"addObject", &Player::addObject,
     	"removeObject", &Player::removeObject,
-    	"hasObject", &Player::hasObject
+    	"hasObject", &Player::hasObject,
+    	/* Remove these eventually */
+    	"takeItem", &Player::takeItem,
+    	"dropItem", &Player::dropItem,
+    	"moveThrough", &Player::moveThrough
     );
 
     printf("classes registered\n");
