@@ -4,6 +4,7 @@
 #include "Object.hxx"
 #include "Room.hxx"
 #include "Exit.hxx"
+#include "Player.hxx"
 
 using namespace sol;
 using namespace std;
@@ -20,8 +21,12 @@ inline void my_panic(sol::optional<std::string> maybe_msg) {
 //inline Room* luaCastRoom(gameObject *obj) {return dynamic_cast<Room*>(obj);}
 //inline Room* luaCastExit(gameObject *obj) {return dynamic_cast<Exit*>(obj);}
 
+/* Globals */
 state luastate;
-
+ObjectList *objectsLIST;
+RoomList *roomsLIST;
+ExitList *exitsLIST;
+Player *player;
 
 int main (int argc, char* argv[]) {
 	
@@ -88,26 +93,41 @@ int main (int argc, char* argv[]) {
     	"getExit", &ExitList::getExit
     );
 
+    /* Register class player */
+    luastate.new_usertype<Player>("Player",
+    	constructors<Player(), Player(sol::table)>(),
+    	"getRoom", &Player::getRoom,
+    	"addObject", &Player::addObject,
+    	"removeObject", &Player::removeObject,
+    	"hasObject", &Player::hasObject
+    );
+
     printf("classes registered\n");
 
     /* Create test objects by loading lua script*/
     luastate.script_file("../src/objects.lua");
     luastate.script_file("../src/rooms.lua");
+    luastate.script_file("../src/player.lua");
     //printf("Object script read\n");
     sol::table objectTable = luastate.get<table>("objectEntries");
     sol::table roomTable = luastate.get<table>("roomEntries");
     sol::table exitTable = luastate.get<table>("exitEntries");
-    ObjectList *objects = new ObjectList(objectTable);
-    RoomList *rooms = new RoomList(roomTable);
-    ExitList *exits = new ExitList(exitTable);
+    sol::table playerTable = luastate.get<table>("playerStart");
+    objectsLIST = new ObjectList(objectTable);
+    roomsLIST = new RoomList(roomTable);
+    exitsLIST = new ExitList(exitTable);
 
     printf("gameObjects Created\n");
 
     //luastate.set("testGameObject1", objects->getObject("obj1"));
     //luastate.set("testGameObject2", objects->getObject("obj2"));
-    luastate.set("objects", objects);
-    luastate.set("rooms", rooms);
-    luastate.set("exits", exits);
+    luastate.set("objects", objectsLIST);
+    luastate.set("rooms", roomsLIST);
+    luastate.set("exits", exitsLIST);
+
+    /* Player */
+    player = new Player(playerTable);
+    luastate.set("player", player);
 
     //luastate.set_function("luaCastRoom", &luaCastRoom);
     //luastate.set_function("luaCastExit", &luaCastExit);

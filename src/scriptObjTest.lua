@@ -34,5 +34,11 @@ room1:executeOnLeave()
 exit_room1_room2:executeOnPass()
 room2:executeOnEnter()
 
+print("\n\n\n---Doing player tests---")
+print(player:hasObject("obj1"))
+player:addObject("obj1")
+print(player:hasObject("obj1"))
+print(player:getRoom())
+
 --I should make a function in room to call a "foreach"
 --on every item in the room

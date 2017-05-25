@@ -103,7 +103,11 @@ private:
 
 	/* Used to store all stateful information about the object. Pretty much
 	everything should be implemented as a property. These can be checked by
-	verb functions. */
+	verb functions. 
+	
+	TODO: abstract this out into a PropertyManager so that Player
+	can use it too
+	*/
 	unordered_map<string, sol::object> properties;
 
 	/* When the user says "pull lever", it calls the function associated
