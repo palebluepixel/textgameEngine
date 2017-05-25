@@ -166,7 +166,7 @@ int main (int argc, char* argv[]) {
     luastate.set_function("closeGame", &closeGame);
 
     /* Print starting description */
-    luastate.script_file("../src/gamestart.lua");
+    luastate.script_file("../src/gameStart.lua");
 
     string inp;
     while(!shouldClose){

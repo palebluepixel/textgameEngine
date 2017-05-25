@@ -15,7 +15,7 @@ CXXFLAGS = -g -Wall
 CPPFLAGS = -I/usr/local/include
 
 SRCS = $(wildcard $(SRC_DIR)/*.cxx)
-LIBS = -llua
+LIBS = -llua -ldl -lm -lreadline
 INCLUDES = $(wildcard $(SRC_DIR)/*/*.hxx)
 OBJS = $(notdir $(SRCS:.cxx=.o))
 
