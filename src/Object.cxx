@@ -70,7 +70,7 @@ sol::object gameObject::getProperty(string prop)
 {
 	auto result = this->properties.find(prop);
 	if(result == this->properties.end()){
-		return sol::object(sol::nil);
+		return sol::nil;
 	}
 	return result->second;
 }
@@ -122,4 +122,21 @@ for example, to print descriptions easily. */
 void gameObject::printProperty(string prop)
 {
 	printf("%s", this->getProperty(prop).as<string>().c_str());
+}
+
+/* Gets the string result from a sol::function in 
+properties with the given name. */
+string gameObject::getStringFromFunc(string funcName)
+{
+	sol::object func = this->getProperty(funcName);
+	if(func == sol::nil){
+		return "";
+	}
+	return (func.as<sol::function>())();
+}
+
+/* Prints the string returned by the function with the given name */
+void gameObject::printDescription(string funcName)
+{
+	printf("%s", this->getStringFromFunc(funcName).c_str());
 }

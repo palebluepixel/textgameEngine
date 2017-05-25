@@ -51,6 +51,8 @@ int main (int argc, char* argv[]) {
         "getVerb", &gameObject::getVerb,
         "executeVerbFunction", &gameObject::executeVerbFunction,
         "getChristianName", &gameObject::getChristianName,
+        "getStringFromFunc", &gameObject::getStringFromFunc,
+        "printDescription", &gameObject::printDescription,
         "displayName", property(&gameObject::getDisplayName, &gameObject::setDisplayName)
     );
 
@@ -65,6 +67,9 @@ int main (int argc, char* argv[]) {
     	"containsExit", &Room::containsExit,
     	"executeOnLeave", &Room::executeOnLeave,
     	"executeOnEnter", &Room::executeOnEnter,
+    	"describeRoomContents", &Room::describeRoomContents,
+    	"describeObjects", &Room::describeObjects,
+    	"describeExits", &Room::describeExits,
     	sol::base_classes, sol::bases<gameObject>()
     );
 

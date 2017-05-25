@@ -72,10 +72,20 @@ void Room::describeRoomContents()
 
 void Room::describeObjects()
 {
-
+	for(string objstr : this->objects){
+		gameObject *obj = objectsLIST->getObject(objstr);
+		if(!obj)
+			continue;
+		obj->printDescription("descInRoom");
+	}
 }
 
 void Room::describeExits()
 {
-
+	for(string objstr : this->exits){
+		Exit *obj = exitsLIST->getExit(objstr);
+		if(!obj)
+			continue;
+		obj->printDescription("descInRoom");
+	}
 }

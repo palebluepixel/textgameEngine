@@ -3,8 +3,15 @@ objectEntries = {
         displayName = "lever",
         aliases = {"wallguy"},
         properties = {
-        	coolness = 1;
-        	pulled = 0;
+        	coolness = 1,
+        	pulled = 0,
+        	descInRoom = function () 
+        		pulledstr = ""
+				if objects:getObject("obj1"):getProperty("pulled") == 1 then
+					pulledstr = "pulled. " 
+				else pulledstr = "not pulled. "
+				end
+        	return "There is a rusty lever on the wall that is " .. pulledstr end
     	},
     	verbs = {
     		pull = function ()
@@ -23,8 +30,9 @@ objectEntries = {
         displayName = "button",
         aliases = {},
         properties = {
-        	coolness = 2;
-        	pushed = 0;
+        	coolness = 2,
+        	pushed = 0,
+        	descInRoom = function () return "A shiny new button sits on the wall. " end
     	},
     	verbs = {}
     },

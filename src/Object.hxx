@@ -77,6 +77,13 @@ public:
 	for example, to print descriptions easily. */
 	void printProperty(string prop);
 
+	/* Gets the string result from a sol::function in 
+	properties with the given name. */
+	string getStringFromFunc(string funcName);
+
+	/* Prints the string returned by the function with the given name */
+	void printDescription(string funcName);
+
 
 	/* TODO: reset object fields from table (to allow reloading from
 	scripts) */
