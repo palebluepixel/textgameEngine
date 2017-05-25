@@ -24,6 +24,8 @@ void gameObject::setObjectDataFromTable(sol::table t, string name)
 
 	this->christianName = name;
 	this->setDisplayName(displayName);
+	//The name we show the player is always an alias
+	this->addAlias(displayName); 
 	this->setPropertiesFromTable(properties);
 	this->setVerbsFromTable(verbs);
 	this->setAliasesFromArray(aliases);

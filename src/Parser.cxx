@@ -26,7 +26,7 @@ void tellEm()
 
 void dontKnowVerb(string noun, string verb)
 {
-	printf("I don't know how to %s %s.\n", noun.c_str(), verb.c_str());
+	printf("I don't know how to %s %s.\n", verb.c_str(), noun.c_str());
 }
 
 void dontKnowNoun(string noun)
@@ -56,48 +56,31 @@ void Parser::handleInput(string inp)
 	/* Get the player's current room so we can look for matches. */
 	Room* curRoom = player->getRoomObj(); //player is global
 
-	/* TODO: figure out how to do the typecasting on this so there
-	isn't repeated code */
-	/* Actually, this might work */
-
-	// /* 1: check exits of current room */
-	// if(curRoom->containsExit(noun)){
-	// 	Exit *match = exitsLIST->getExit(noun);
-	// 	int ret = match->executeVerbFunction(verb);
-	// 	if(!ret) dontKnowVerb(noun, verb);
-	// 	return;
-	// }
-
-	// /* 2: check room itself */
-	// if(curRoom->getChristianName() == noun){
-	// 	int ret = curRoom->executeVerbFunction(verb);
-	// 	if(!ret) dontKnowVerb(noun, verb);
-	// 	return;
-	// }
-
-	// /* 3: check objects in player's inventory */
-	// if(player->hasObject(noun)){
-	// 	gameObject *match = objectsLIST->getObject(noun);
-	// 	int ret = match->executeVerbFunction()
-	// }
-
 	gameObject *match = NULL;
 
 	/* 1: check exits of current room */
-	if(curRoom->containsExitByAlias(noun)) 
+	if(curRoom->containsExitByAlias(noun)){
 		match = dynamic_cast<gameObject*>(exitsLIST->getExitByAlias(noun));
+		goto matchFound;
+	}
 
 	/* 2: check room itself */
-	if(curRoom->goesByAlias(noun)) 
+	if(curRoom->goesByAlias(noun)){
 		match = dynamic_cast<gameObject*>(curRoom);
+		goto matchFound;
+	}
 
 	/* 3: check objects in player's inventory */
-	if(player->hasObjectByAlias(noun))
+	if(player->hasObjectByAlias(noun)){
 		match = objectsLIST->getObjectByAlias(noun);
+		goto matchFound;
+	}
 
 	/* 4: check items in current room */
-	if(curRoom->containsObjectByAlias(noun))
+	if(curRoom->containsObjectByAlias(noun)){
 		match = objectsLIST->getObjectByAlias(noun);
+		goto matchFound;
+	}
 
 	/* If we didn't get a match, reject the input */
 	if(!match){
@@ -107,6 +90,7 @@ void Parser::handleInput(string inp)
 
 	/* If we did, try to call the verb function. If we get 0 back, 
 	there was no entry. */
+matchFound:
 	int ret = match->executeVerbFunction(verb);
 	if(!ret)
 	{

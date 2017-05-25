@@ -1,7 +1,7 @@
 objectEntries = {
     obj1 = {
         displayName = "lever",
-        aliases = {"lever", "wallguy"},
+        aliases = {"wallguy"},
         properties = {
         	coolness = 1;
         	pulled = 0;
@@ -21,7 +21,7 @@ objectEntries = {
     },
     obj2 = {
         displayName = "button",
-        aliases = {"button"},
+        aliases = {},
         properties = {
         	coolness = 2;
         	pushed = 0;

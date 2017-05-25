@@ -154,5 +154,16 @@ int main (int argc, char* argv[]) {
 
     luastate.script_file("../src/scriptObjTest.lua");
 
+    /* Ability to quit the game */
+    int shouldClose = 0;
+    luastate.set("shouldClose", &shouldClose);
+
+    string inp;
+    while(!shouldClose){
+    	cout << "\n> ";
+    	getline(cin, inp);
+    	parser->handleInput(inp); 
+    }
+
     printf("Done\n");
 }

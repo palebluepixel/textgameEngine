@@ -1,7 +1,7 @@
 roomEntries = {
 	room1 = {
-		displayName = "Field of Grass",
-		aliases = {"Field of Grass"},
+		displayName = "field of grass",
+		aliases = {},
 		properties = {},
 		verbs = {},
 		objects = {},
@@ -10,8 +10,8 @@ roomEntries = {
 		onLeave = function () print("leave 1")end
 	},
 	room2 = {
-		displayName = "House wall",
-		aliases = {"House wall"},
+		displayName = "house wall",
+		aliases = {},
 		properties = {},
 		verbs = {},
 		objects = {"obj1"},
@@ -26,12 +26,29 @@ roomEntries = {
 
 exitEntries = {
 	exit_room1_room2 = {
-		displayName = "East",
-		aliases = {"East"},
+		displayName = "east",
+		aliases = {},
 		properties = {},
-		verbs = {},
+		verbs = {
+			go = function() player:moveThrough(exit_room1_room2) end
+		},
 		roomFrom = "room1",
 		roomTo = "room2",
+		cond = function () 
+			return rooms:getRoom("room1"):hasObject("obj1") 
+		end,
+		onPass = function () print("passing to room 2") end,
+		onFail = function () print("You can't go that way rn") end
+	},
+	exit_room2_room1 = {
+		displayName = "west",
+		aliases = {},
+		properties = {},
+		verbs = {
+			go = function() player:moveThrough(exit_room2_room1) end
+		},
+		roomFrom = "room2",
+		roomTo = "room1",
 		cond = function () 
 			return rooms:getRoom("room1"):hasObject("obj1") 
 		end,
