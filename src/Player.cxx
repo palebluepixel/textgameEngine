@@ -97,3 +97,10 @@ void Player::moveThrough(string exit)
 	to->executeOnEnter();
 
 }
+
+
+int Player::hasObjectByAlias(string alias)
+{
+	gameObject *obj = objectsLIST->getObjectByAlias(alias);
+	return (obj && this->hasObject(obj->getChristianName()));
+}

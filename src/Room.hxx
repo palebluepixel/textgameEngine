@@ -17,6 +17,12 @@ is, unique IDs)
 A room also contains an onEnter function that triggers when the player
 enters the room (usually this just prints out text).*/
 
+class ObjectList;
+class ExitList;
+
+extern ObjectList *objectsLIST;
+extern ExitList *exitsLIST;
+
 class Room : public gameObject {
 public:
 	Room();
@@ -45,6 +51,11 @@ public:
 
 	inline int containsObject(string s) {return this->objects.find(s) != this->objects.end();}
 	inline int containsExit(string s) {return this->exits.find(s) != this->exits.end();}
+
+	int containsObjectByAlias(string alias);
+	gameObject *getObjectfromRoomByAlias(string alias);
+	int containsExitByAlias(string alias);
+	Exit *getExitFromRoomByAlias(string alias);
 
 	/* Print out a description of all objects and exits in the room. */
 	void describeRoomContents();

@@ -42,6 +42,11 @@ public:
 	or NULL if none exists. */
 	gameObject *getObject(string name);
 
+	/* Get an object by one of it's aliases. If multiple objects
+	go by the same alias, this can cause issues, so aliases should be
+	non-overlapping sets. */
+	gameObject *getObjectByAlias(string name);
+
 private:
 	void addObject(string name, gameObject *obj);
 
@@ -60,6 +65,11 @@ public:
 	or NULL if none exists. */
 	Room *getRoom(string name);
 
+	/* Get an object by one of it's aliases. If multiple objects
+	go by the same alias, this can cause issues, so aliases should be
+	non-overlapping sets. */
+	Room *getRoomByAlias(string name);
+
 private:
 	void addRoom(string name, Room *obj);
 
@@ -77,6 +87,11 @@ public:
 	/* Get an object by its christian name (unique identifier),
 	or NULL if none exists. */
 	Exit *getExit(string name);
+
+	/* Get an object by one of it's aliases. If multiple objects
+	go by the same alias, this can cause issues, so aliases should be
+	non-overlapping sets. */
+	Exit *getExitByAlias(string name);
 
 private:
 	void addExit(string name, Exit *obj);

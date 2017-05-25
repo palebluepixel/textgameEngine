@@ -1,4 +1,5 @@
 #include "Room.hxx"
+#include "ObjectList.hxx"
 
 Room::Room()
 {
@@ -45,6 +46,19 @@ void Room::addExitsFromArray(sol::table t)
 {
 	t.for_each([&](const sol::object& /*key*/, const sol::object& value) 
 		{this->addExit(value.as<string>());});
+}
+
+
+int Room::containsObjectByAlias(string alias)
+{
+	gameObject *obj = objectsLIST->getObjectByAlias(alias);
+	return (obj && this->containsObject(obj->getChristianName()));
+}
+
+int Room::containsExitByAlias(string alias)
+{
+	Exit *exit = exitsLIST->getExitByAlias(alias);
+	return (exit && this->containsExit(exit->getChristianName()));
 }
 
 

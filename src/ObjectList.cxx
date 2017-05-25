@@ -43,7 +43,18 @@ void ObjectList::addObject(string name, gameObject *obj)
 	this->objects[name] = obj;
 }
 
-
+/* Get an object by one of it's aliases. If multiple objects
+go by the same alias, this can cause issues, so aliases should be
+non-overlapping sets. */
+gameObject *ObjectList::getObjectByAlias(string name)
+{
+	for (auto pair : this->objects){
+		gameObject *obj = pair.second;
+		if(obj->goesByAlias(name))
+			return obj;
+	}
+	return NULL;
+}
 
 
 
@@ -86,7 +97,18 @@ void RoomList::addRoom(string name, Room *obj)
 	this->objects[name] = obj;
 }
 
-
+/* Get an object by one of it's aliases. If multiple objects
+go by the same alias, this can cause issues, so aliases should be
+non-overlapping sets. */
+Room *RoomList::getRoomByAlias(string name)
+{
+	for (auto pair : this->objects){
+		Room* obj = pair.second;
+		if(obj->goesByAlias(name))
+			return obj;
+	}
+	return NULL;
+}
 
 
 
@@ -134,3 +156,17 @@ void ExitList::addExit(string name, Exit *obj)
 {
 	this->objects[name] = obj;
 } 
+
+
+/* Get an object by one of it's aliases. If multiple objects
+go by the same alias, this can cause issues, so aliases should be
+non-overlapping sets. */
+Exit *ExitList::getExitByAlias(string name)
+{
+	for (auto pair : this->objects){
+		Exit *obj = pair.second;
+		if(obj->goesByAlias(name))
+			return obj;
+	}
+	return NULL;
+}

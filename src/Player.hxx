@@ -39,6 +39,7 @@ public:
 	inline void addObject(string s) {this->objects.insert(s);}
 	inline void removeObject(string s) {this->objects.erase(s);}
 	inline int  hasObject(string s) {return this->objects.find(s) != this->objects.end();}
+	int hasObjectByAlias(string alias);
 
 	/* TODO: give items onDrop and onTake functions that get called here? */
 

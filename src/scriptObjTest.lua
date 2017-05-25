@@ -61,9 +61,9 @@ print("\n\n\n---Doing parser tests---")
 room1:removeObject("obj1")
 room2:addObject("obj1")
 print(testGameObject1:getProperty("pulled"))
-parser:handleInput("pull obj1")
+parser:handleInput("pull lever")
 print(testGameObject1:getProperty("pulled"))
-parser:handleInput("pull obj1")
+parser:handleInput("pull wallguy")
 print(testGameObject1:getProperty("pulled"))
 
 

@@ -84,20 +84,20 @@ void Parser::handleInput(string inp)
 	gameObject *match = NULL;
 
 	/* 1: check exits of current room */
-	if(curRoom->containsExit(noun)) 
-		match = dynamic_cast<gameObject*>(exitsLIST->getExit(noun));
+	if(curRoom->containsExitByAlias(noun)) 
+		match = dynamic_cast<gameObject*>(exitsLIST->getExitByAlias(noun));
 
 	/* 2: check room itself */
-	if(curRoom->getChristianName() == noun) 
+	if(curRoom->goesByAlias(noun)) 
 		match = dynamic_cast<gameObject*>(curRoom);
 
 	/* 3: check objects in player's inventory */
-	if(player->hasObject(noun))
-		match = objectsLIST->getObject(noun);
+	if(player->hasObjectByAlias(noun))
+		match = objectsLIST->getObjectByAlias(noun);
 
 	/* 4: check items in current room */
-	if(curRoom->containsObject(noun))
-		match = objectsLIST->getObject(noun);
+	if(curRoom->containsObjectByAlias(noun))
+		match = objectsLIST->getObjectByAlias(noun);
 
 	/* If we didn't get a match, reject the input */
 	if(!match){
