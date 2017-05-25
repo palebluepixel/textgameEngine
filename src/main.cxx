@@ -44,8 +44,8 @@ int main (int argc, char* argv[]) {
     /* Register object class */
     luastate.new_usertype<gameObject>( "gameObject",
         constructors<gameObject(), gameObject(sol::table, string)>(),
-        "addAlias", gameObject::addAlias,
-        "goesByAlias", gameObject::goesByAlias,
+        "addAlias", &gameObject::addAlias,
+        "goesByAlias", &gameObject::goesByAlias,
         "setProperty", &gameObject::setProperty,
         "getProperty", &gameObject::getProperty,
         "getPropertyType", &gameObject::getPropertyType,
