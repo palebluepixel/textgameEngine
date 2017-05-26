@@ -40,7 +40,7 @@ public:
 	inline sol::function getOnFail() { return this->onFail; }
 
 	/* Returns the value returned by cond */
-	inline int executeCond() { return this->cond(); }
+	inline bool executeCond() { return this->cond(); }
 
 	inline void executeOnPass() { this->onPass(); }
 	inline void executeOnFail() { this->onFail(); }

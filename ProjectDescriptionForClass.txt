@@ -2,14 +2,14 @@ Aidan Sadowski
 
 ### Project Goals
 
-My original goal for the project was to create a text-based video game because I thought that sounded like a fun porject. Then, I wanted to learn more about how to build the infrastructure for a game from the ground up, so I changed my goal to focus on making an engine for text-based video games in C++, with the additional goal of creating a short working example of a game for the demo. I submitted that as my project description and got your feedback that doing things in just C++ is outdated and that I ought to look into scripting, so I followed that advice and changed the project goal to: 
+My original goal for the project was to create a text-based video game because I thought that sounded like a fun project. Then, I wanted to learn more about how to build the infrastructure for a game from the ground up, so I changed my goal to focus on making an engine for text-based video games in C++, with the additional goal of creating a short working example of a game for the demo. I submitted that as my project description and got your feedback that doing things in just C++ is outdated and that I ought to look into scripting, so I followed that advice and changed the project goal to: 
 
 * Learn how to utilize lua scripting in C++ using a text-based video game engine as a case study.
 
 This had the subgoals of:
 	* Learn how to create C++ objects and data structures from lua tables
 	* Learn how to write lua scripts that modify C++ data
-	* Seperate the engine code and gameplay code such that all engine stuff is in C++ and all gameplay (like item properties, what actions can be taken on which items, etc) is in lua scripts.
+	* Separate the engine code and gameplay code such that all engine stuff is in C++ and all gameplay (like item properties, what actions can be taken on which items, etc) is in lua scripts.
 
 
 ### Libraries Used
@@ -20,7 +20,7 @@ I used lua 5.2.4 as my scripting language. I also used sol2, a lua binding libra
 ### Simplifying Assumptions
 
 All user input is constrained to either match a command given in parserCommands.lua exactly, or else be of the form "[verb] [noun]",
-where noun is the name of an object in the world and verb is a valid entry in that object's verb table (more on that later). This has the limitation that a player cannot explicitly use an item on another item, or expliclty combine items.
+where noun is the name of an object in the world and verb is a valid entry in that object's verb table (more on that later). This has the limitation that a player cannot explicitly use an item on another item, or explicitly combine items.
 
 All objects in the world must have a unique name. 
 
@@ -37,7 +37,7 @@ An Object also has a hashmap of references to lua functions (map: string -> sol:
 
 Rooms and Exits are subclasses of Objects, so they can also have properties. They also have additional fields:
 
-A Room has a list of Objects within it, and a list of Exits leading out of it. It also has an onEnter function which triggers when the player enters the room and an onLeave function that triggers when the player leaves. For example, a room filled with poisinous gas might damage the player when they walk into it; this can be implemented in the onEnter function. These functions are defined in the lua scripts used to create the rooms. 
+A Room has a list of Objects within it, and a list of Exits leading out of it. It also has an onEnter function which triggers when the player enters the room and an onLeave function that triggers when the player leaves. For example, a room filled with poisonous gas might damage the player when they walk into it; this can be implemented in the onEnter function. These functions are defined in the lua scripts used to create the rooms. 
 
 An Exit has the room it comes from and the room it leads to (exits are one-directional). It has a condition function that is checked by the C++ engine when the player tries to move through the exit. It has an onPass and onFail function, the first is called when the player can pass through the exit (the condition function returns 1) and the latter is called when the player cannot. For example, trying to climb an electric fence before deactivating it could both not let the player pass, and damage them / burn up an item in their inventory. These functions are defined by the lua scripts.
 
@@ -46,8 +46,17 @@ The Player has a list of objects which is their inventory. The player does not c
 
 ### Places for Extension
 
-* Allowing player input to be of more complicated forms, allow using one object on ahother
-* 
+* Allowing player input to be of more complicated forms, allow using one object on another
+* Change Rooms and Exits from being subclasses to just being Objects with a flag indicating that they are a room or an exit, and implement their specific fields as properties. This would solve a lot of repeated code problems on the c++ side.
+* Check that an object has all required properties and that their values are of the correct types when creating objects from scripts - right now bad user input is accepted and can cause weird failures down the road. 
+* Function to create a lua object table given some inputs and sets the rest to default values so you don't have to type out the whole table for every object.
+* Default property values. E.g. if we want to be able to set objects on fire, every object needs an "onFire" property, but it would be annoying to have to manually type this into the property table for every object. Only an object that starts with a value other than the default should need to set that value, others should have it by default.
+* Easier support for "generic" functions
+* Map object and exit aliases to unique identifiers within the context of the player's current room; that is, search the room for an alias match rather than the global list. This would reduce computation and ensure that multiple objects with the same aliases but in different rooms don't cause issues.
+* Allow objects to be defined in seperate files to reduce clutter.
+* More informative error messages when a lua script tries to grab an object, room, exit, or property that doesn't exist.
+* onDrop and onTake functions for obejects called by the player takeItem and dropItem functions
+* Change printfs to general print statement which can change the file descriptor it prints to, do formatting, color text, etc 
 
 ### Conclusion
 

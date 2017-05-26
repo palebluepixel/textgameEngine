@@ -41,6 +41,9 @@ public:
 	inline int  hasObject(string s) {return this->objects.find(s) != this->objects.end();}
 	int hasObjectByAlias(string alias);
 
+	/* Print out the player's inventory */
+	void printInv();
+
 	/* TODO: give items onDrop and onTake functions that get called here? */
 
 	/* Remove an item from the room it is currently in and place it in

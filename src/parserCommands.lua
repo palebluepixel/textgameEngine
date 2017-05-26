@@ -6,6 +6,7 @@ parserCommands = {
 			r:printDescription("descLong")
 			r:describeRoomContents()
 		end,
-		exit = function() closeGame() end
+		quit = function() closeGame() end,
+		inv = function() player:printInv() end
 	}
 }

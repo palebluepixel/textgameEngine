@@ -20,6 +20,16 @@ Player::Player(sol::table t)
 		{this->addObject(value.as<string>());});
 }
 
+/* Print out the player's inventory */
+void Player::printInv()
+{
+	for(string objstr : this->objects)
+	{
+		printf("%s", objectsLIST->getObject(objstr)->getDisplayName().c_str());
+	}
+	printf("\n");
+}
+
 /* Remove an item from the room it is currently in and place it in
 our inventory. Checking whether the item can be taken and any other
 gameplay consequences should be implemented in the lua script calling
@@ -69,7 +79,11 @@ void Player::moveThrough(string exit)
 		printf("warning, nonexistant exit: %s\n", exit.c_str());
 		return;
 	}
-	if(!e->executeCond()){
+
+	/* Check if we can pass through the exit */
+	bool cond = e->executeCond();
+
+	if(!cond){
 		e->executeOnFail();
 		return;
 	}

@@ -31,12 +31,13 @@ Player *player;
 
 int shouldClose = 0;
 void closeGame() {shouldClose = 1;}
+void winGame() {luastate.get<sol::function>("win")(); closeGame();}
 
 int main (int argc, char* argv[]) {
 	
 	/* Initalization */
 	lua_atpanic(luastate, sol::c_call<decltype(&my_panic), &my_panic>);
-    luastate.open_libraries( sol::lib::base );
+    luastate.open_libraries( sol::lib::base, sol::lib::io );
 
     /* TODO: make class registration functions in the classes and call them in
     an organized way, rather than having it live in main */
@@ -107,6 +108,7 @@ int main (int argc, char* argv[]) {
     luastate.new_usertype<Player>("Player",
     	constructors<Player(), Player(sol::table)>(),
     	"getRoom", &Player::getRoom,
+    	"printInv", &Player::printInv,
     	"addObject", &Player::addObject,
     	"removeObject", &Player::removeObject,
     	"hasObject", &Player::hasObject,
@@ -124,7 +126,10 @@ int main (int argc, char* argv[]) {
 
     //printf("classes registered\n");
 
-    /* Create test objects by loading lua script*/
+    /* load utility functions */
+    luastate.script_file("../src/functions.lua");
+
+    /* Create objects by loading lua script*/
     luastate.script_file("../src/objects.lua");
     luastate.script_file("../src/rooms.lua");
     luastate.script_file("../src/player.lua");
@@ -164,6 +169,7 @@ int main (int argc, char* argv[]) {
 
     /* Ability to quit the game */
     luastate.set_function("closeGame", &closeGame);
+    luastate.set_function("winGame", &winGame);
 
     /* Print starting description */
     luastate.script_file("../src/gameStart.lua");
@@ -175,5 +181,5 @@ int main (int argc, char* argv[]) {
     	parser->handleInput(inp); 
     }
 
-    printf("Done\n");
+    //printf("Done\n");
 }
