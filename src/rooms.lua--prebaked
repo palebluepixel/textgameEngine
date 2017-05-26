@@ -20,7 +20,7 @@ roomEntries = {
 			descLong = function () return "You are standing next to the wall of a house. " end
 		},
 		verbs = {},
-		objects = {"obj1", --[[ --]]},
+		objects = {"obj1", --[["npc_gatekeeper"--]]},
 		exits = {"exit_room2_room1", "exit_room2_insideHouse"},
 		onEnter = function() genericEnter(rooms, "room2") end,
 		onLeave = function () end
@@ -99,8 +99,9 @@ exitEntries = {
 		cond = function ()
 			lever = objects:getObject("obj1")
 			leverPulled = lever:getProperty("pulled")
-			--[[ --]]
-			return leverPulled --[[ --]]
+			--[[man = objects:getObject("npc_gatekeeper")
+			ttt = man:getProperty("timesTalkedTo")--]]
+			return leverPulled --[[ and ttt>=2--]]
 		end,
 		onPass = function () print("You move through the door. ") end,
 		onFail = function () print("The door appears to be locked. ") end
