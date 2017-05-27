@@ -7,11 +7,11 @@ objectEntries = {
         	pulled = false,
         	descInRoom = function () 
         		pulledstr = ""
-				if objects:getObject("obj1"):getProperty("pulled") == 1 then
+				if objects:getObject("obj1"):getProperty("pulled") then
 					pulledstr = "pulled. " 
 				else pulledstr = "not pulled. "
 				end
-        	return "There is a rusty lever on the wall that is " .. pulledstr end
+        	return "There is a rusty lever on the ground that is " .. pulledstr end
     	},
     	verbs = {
     		pull = function ()

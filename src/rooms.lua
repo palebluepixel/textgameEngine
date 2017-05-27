@@ -7,7 +7,7 @@ roomEntries = {
 			descLong = function () return "You are standing in a field of grass. " end
 		},
 		verbs = {},
-		objects = {"egg_grue"},
+		objects = {"egg_grue", "obj1"},
 		exits = {"exit_room1_room2"},
 		onEnter = function () genericEnter(rooms,"room1") end,
 		onLeave = function () end
@@ -20,7 +20,7 @@ roomEntries = {
 			descLong = function () return "You are standing next to the wall of a house. " end
 		},
 		verbs = {},
-		objects = {"obj1", --[[ --]]},
+		objects = {--[[ --]]},
 		exits = {"exit_room2_room1", "exit_room2_insideHouse"},
 		onEnter = function() genericEnter(rooms, "room2") end,
 		onLeave = function () end
@@ -92,7 +92,9 @@ exitEntries = {
 			end
 		},
 		verbs = {
-			go = function() genericMoveThrough(player, "exit_room2_insideHouse") end
+			go = function() genericMoveThrough(player, "exit_room2_insideHouse") end,
+			enter = function() genericMoveThrough(player, "exit_room2_insideHouse") end,
+			open = function() genericMoveThrough(player, "exit_room2_insideHouse") end
 		},
 		roomFrom = "room2",
 		roomTo = "insideHouse",
@@ -107,8 +109,8 @@ exitEntries = {
 	},
 
 	exit_insideHouse_room2 = {
-		displayName = "door",
-		aliases = {"outside","doorway"},
+		displayName = "outside",
+		aliases = {},
 		properties = {
 			descInRoom = function()
 				locked = not exits:getExit("exit_room2_insideHouse"):executeCond()
