@@ -41,7 +41,14 @@ objectEntries = {
         verbs = {
             take = function() genericTake(player, "egg_grue") end,
             drop = function() genericDrop(player, "egg_grue") end,
-            eat = function() player:removeObject("egg_grue"); print("You eat the egg. It tastes bad.") end
+            eat = function() 
+                if player:hasObject("egg_grue")==1 then
+                    player:removeObject("egg_grue") 
+                    print("You eat the egg. It tastes bad.") 
+                else
+                    print("You need to take the egg before you can eat it!")
+                end
+            end
         }
     },
 
